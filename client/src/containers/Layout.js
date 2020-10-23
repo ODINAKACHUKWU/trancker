@@ -4,9 +4,11 @@ import Footer from "./Footer";
 
 function Layout({ component }) {
   return (
-    <div>
-      <NavBar />
-      {component}
+    <div id="page-container">
+      <div id="content-wrap">
+        <NavBar />
+        <div>{component}</div>
+      </div>
       <Footer />
     </div>
   );

@@ -7,7 +7,7 @@ function Layout({ component }) {
     <div id="page-container">
       <div id="content-wrap">
         <NavBar />
-        <div>{component}</div>
+        <div className="container mt-5 pt-5">{component}</div>
       </div>
       <Footer />
     </div>

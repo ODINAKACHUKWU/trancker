@@ -3,17 +3,13 @@ import Layout from "../containers/Layout";
 
 function DashboardPage() {
   const dashboard = (
-    <div className="main">
+    <div>
       <h1>Dashboard</h1>
       <p>This is the dashboard page</p>
     </div>
   );
 
-  return (
-    <div>
-      <Layout component={dashboard} />
-    </div>
-  );
+  return <Layout component={dashboard} />;
 }
 
 export default DashboardPage;

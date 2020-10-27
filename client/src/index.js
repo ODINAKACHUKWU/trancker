@@ -1,7 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
 import * as serviceWorker from "./serviceWorker";
 import BaseRoute from "./routes/BaseRoute";
+import store from "./store";
 
 // Styles
 import "bootstrap/dist/css/bootstrap.css";
@@ -9,7 +11,9 @@ import "./assets/stylesheets/common.scss";
 
 ReactDOM.render(
   <React.StrictMode>
-    <BaseRoute />
+    <Provider store={store}>
+      <BaseRoute />
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );

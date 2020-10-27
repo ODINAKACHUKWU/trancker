@@ -1,1 +1,11 @@
 @import "../base.scss";
+
+.btn-brown {
+  background-color: $brown !important;
+  border-color: $brown;
+
+  &:hover {
+    background-color: $dark-brown !important;
+    color: $white !important;
+  }
+}

@@ -2,7 +2,7 @@ class TransactionsController < ApplicationController
   before_action :set_transaction, only: [:show, :update, :destroy]
 
   def index
-    @transactions = Transaction.all
+    @transactions = Transaction.order(id: :desc)
     render json: @transactions, status: :ok
   end
 

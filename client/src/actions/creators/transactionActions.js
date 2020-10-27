@@ -37,7 +37,7 @@ const fetchTransactionsSuccess = (transactions) => ({
   transactions,
 });
 
-const fetchtTransactionsFailure = (error) => ({
+const fetchTransactionsFailure = (error) => ({
   type: FETCH_TRANSACTIONS_FAILURE,
   error,
 });
@@ -61,12 +61,10 @@ const fetchTransactions = () => async (dispatch) => {
   try {
     const url = `${BASE_URL}/transactions`;
     const response = await axios.get(url);
-    console.log(">>>>>>>>>>>> Response", response);
-    // const transaction = response.data;
-    // dispatch(fetchTransactionsSuccess());
+    const transactions = response.data;
+    dispatch(fetchTransactionsSuccess(transactions));
   } catch (error) {
-    console.log(">>>>>>>>>> Error", error);
-    // dispatch(fetchTransactionsFailure(error.response.data.message));
+    dispatch(fetchTransactionsFailure(error.message));
   } finally {
     dispatch(fetchingTransactions(false));
   }

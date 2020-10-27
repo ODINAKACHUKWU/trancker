@@ -4,15 +4,24 @@ import isEmpty from "is-empty";
 import Layout from "../containers/Layout";
 import Modal from "../containers/Modal";
 import AddContributionForm from "../containers/AddContributionForm";
+import { fetchTransactions } from "../actions/creators/transactionActions";
+import Transactions from "../containers/Transactions";
 
 import "../assets/stylesheets/pages/transaction-page.scss";
 
 function TransactionPage() {
   const [ShowModal, setShowModal] = useState(false);
-  const transactionsInfo = useSelector((state) => state.transaction);
-  const { transaction, transactions, error } = transactionsInfo;
+  const {
+    transaction,
+    transactions,
+    fetchingTransactions,
+    error,
+  } = useSelector((state) => state.transaction);
+  const dispatch = useDispatch();
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    dispatch(fetchTransactions());
+  }, []);
 
   const showModal = () => {
     setShowModal(true);
@@ -48,14 +57,17 @@ function TransactionPage() {
           component={addContribution}
         />
       </div>
-      <div className="row">
-        {!isEmpty(transaction) && (
-          <div className="alert alert-success">
-            The transaction was successfully recorded.
-          </div>
-        )}
-        {error && <div className="alert alert-danger">{error}</div>}
+      <div className="container">
+        <div className="row">
+          {!isEmpty(transaction) && (
+            <div className="alert alert-success">
+              The transaction was successfully recorded.
+            </div>
+          )}
+          {error && <div className="alert alert-danger">{error}</div>}
+        </div>
       </div>
+      <Transactions data={transactions} fetching={fetchingTransactions} />
     </Fragment>
   );
 

@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import isEmpty from "is-empty";
 import { transactionValidator } from "../helpers/validator";
-import { recordTransaction } from "../actions/creators/transactionActions";
+import {
+  recordTransaction,
+  fetchTransactions,
+} from "../actions/creators/transactionActions";
 
 import "../assets/stylesheets/containers/add-contribution-form.scss";
 import "../assets/stylesheets/pages/transaction-page.scss";
@@ -17,7 +20,10 @@ function AddContributionForm(props) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!isEmpty(transaction)) props.handleClose();
+    if (!isEmpty(transaction)) {
+      dispatch(fetchTransactions());
+      props.handleClose();
+    }
   }, [transaction]);
 
   const isValid = (data) => {

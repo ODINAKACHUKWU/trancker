@@ -14,6 +14,16 @@ class TransactionsController < ApplicationController
     end
   end
 
+  def update
+    @transaction.update(transaction_params)
+    render json: { message: 'Transaction was updated successfully.' }, status: :ok
+  end
+
+  def destroy
+    @transaction.destroy
+    render json: { message: 'Transaction was deleted successfully.' }, status: :ok
+  end
+
   private
 
   def transaction_params

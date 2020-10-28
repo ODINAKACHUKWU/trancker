@@ -10,6 +10,9 @@ const {
   FETCHING_TRANSACTIONS,
   FETCH_TRANSACTIONS_FAILURE,
   FETCH_TRANSACTIONS_SUCCESS,
+  DELETING_TRANSACTION,
+  DELETE_TRANSACTION_FAILURE,
+  DELETE_TRANSACTION_SUCCESS,
 } = TYPES;
 
 const submittingTransaction = (bool) => ({
@@ -42,6 +45,36 @@ const fetchTransactionsFailure = (error) => ({
   error,
 });
 
+const deletingTransaction = (bool) => ({
+  type: DELETING_TRANSACTION,
+  bool,
+});
+
+const deleteTransactionSuccess = (message) => ({
+  type: DELETE_TRANSACTION_SUCCESS,
+  message,
+});
+
+const deleteTransactionFailure = (error) => ({
+  type: DELETE_TRANSACTION_FAILURE,
+  error,
+});
+
+const updatingTransaction = (bool) => ({
+  type: DELETING_TRANSACTION,
+  bool,
+});
+
+const updateTransactionSuccess = (message) => ({
+  type: DELETE_TRANSACTION_SUCCESS,
+  message,
+});
+
+const updateTransactionFailure = (error) => ({
+  type: DELETE_TRANSACTION_FAILURE,
+  error,
+});
+
 const recordTransaction = (data) => async (dispatch) => {
   dispatch(submittingTransaction(true));
   try {
@@ -70,4 +103,37 @@ const fetchTransactions = () => async (dispatch) => {
   }
 };
 
-export { recordTransaction, fetchTransactions };
+const deleteTransaction = (id) => async (dispatch) => {
+  dispatch(deletingTransaction(true));
+  try {
+    const url = `${BASE_URL}/transactions/${id}`;
+    const response = await axios.delete(url);
+    const message = response.data.message;
+    dispatch(deleteTransactionSuccess(message));
+  } catch (error) {
+    dispatch(deleteTransactionFailure(error.message));
+  } finally {
+    dispatch(deletingTransaction(false));
+  }
+};
+
+const updateTransaction = (id, data) => async (dispatch) => {
+  dispatch(updatingTransaction(true));
+  try {
+    const url = `${BASE_URL}/transactions/${id}`;
+    const response = await axios.patch(url, data);
+    const message = response.data.message;
+    dispatch(updateTransactionSuccess(message));
+  } catch (error) {
+    dispatch(updateTransactionFailure(error.message));
+  } finally {
+    dispatch(updatingTransaction(false));
+  }
+};
+
+export {
+  recordTransaction,
+  fetchTransactions,
+  deleteTransaction,
+  updateTransaction,
+};

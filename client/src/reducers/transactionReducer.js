@@ -7,13 +7,18 @@ const {
   FETCHING_TRANSACTIONS,
   FETCH_TRANSACTIONS_FAILURE,
   FETCH_TRANSACTIONS_SUCCESS,
+  DELETE_TRANSACTION_SUCCESS,
+  DELETE_TRANSACTION_FAILURE,
+  DELETING_TRANSACTION,
 } = TYPES;
 
 const initialState = {
   submittingTransaction: false,
   fetchingTransactions: false,
+  deletingTransaction: false,
   transaction: {},
   transactions: [],
+  message: "",
   error: "",
 };
 
@@ -48,6 +53,21 @@ export default (state = initialState, action) => {
       return {
         ...state,
         error: action.error,
+      };
+    case DELETE_TRANSACTION_SUCCESS:
+      return {
+        ...state,
+        message: action.message,
+      };
+    case DELETE_TRANSACTION_FAILURE:
+      return {
+        ...state,
+        error: action.error,
+      };
+    case DELETING_TRANSACTION:
+      return {
+        ...state,
+        deletingTransaction: action.bool,
       };
     default:
       return state;

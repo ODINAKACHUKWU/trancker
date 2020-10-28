@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-regular-svg-icons";
+import Modal from "../containers/Modal";
+import DeleteTransaction from "../containers/DeleteTransaction";
+import UpdateTransaction from "../containers/UpdateTransaction";
 
 import "../assets/stylesheets/containers/transactions.scss";
 import "../assets/stylesheets/pages/transaction-page.scss";
@@ -15,16 +19,26 @@ function Transactions(props) {
   const [PageCount, setPageCount] = useState(0);
   const [NextPage, setNextPage] = useState(false);
   const [PreviousPage, setPreviousPage] = useState(false);
+  const { transactions } = useSelector((state) => state.transaction);
+  const [ShowModal, setShowModal] = useState(false);
+  const [Action, setAction] = useState("");
+  const [Transaction, setTransaction] = useState({});
 
-  const handleClick = () => {
-    console.log("+++++++ this button was clicked");
+  const showModal = (action, transaction) => {
+    setAction(action);
+    setTransaction(transaction);
+    setShowModal(true);
+  };
+
+  const hideModal = () => {
+    setShowModal(false);
   };
 
   useEffect(() => {
     const pages = [];
-    const pageTransactions = props.data.slice(Offset, Offset + PerPage);
+    const pageTransactions = transactions.slice(Offset, Offset + PerPage);
     pages.push(pageTransactions);
-    const totalCount = props.data.length;
+    const totalCount = transactions.length;
     CurrentPage += 1;
     const nextPage = Offset < totalCount ? true : false;
     const previousPage = CurrentPage > 1 ? true : false;
@@ -63,13 +77,25 @@ function Transactions(props) {
   //     });
   //   };
 
-  let transactions = Data[CurrentPage - 1];
+  //   let transactions = Data[CurrentPage - 1];
   console.log("-------", Data[CurrentPage - 1]);
   console.log("-------", CurrentPage);
   console.log("-------", Data);
 
+  const element = () => {
+    switch (Action) {
+      case "modify":
+        return <UpdateTransaction handleClose={hideModal} data={Transaction} />;
+      case "delete":
+        return <DeleteTransaction handleClose={hideModal} data={Transaction} />;
+    }
+  };
+
   return (
     <div>
+      <div className="row">
+        <Modal show={ShowModal} handleClose={hideModal} component={element()} />
+      </div>
       <table className="table table-striped">
         <thead>
           <tr>
@@ -80,7 +106,7 @@ function Transactions(props) {
           </tr>
         </thead>
         <tbody>
-          {props.data.map((transaction) => (
+          {transactions.map((transaction) => (
             <tr key={transaction.id} className="table-row" role="button">
               <th scope="row">{transaction.payee_name}</th>
               <td>{transaction.amount}</td>
@@ -88,10 +114,13 @@ function Transactions(props) {
               <td>
                 <FontAwesomeIcon
                   icon={faEdit}
-                  onClick={handleClick}
+                  onClick={() => showModal("modify", transaction)}
                   className="mr-3"
                 />
-                <FontAwesomeIcon icon={faTrashAlt} onClick={handleClick} />
+                <FontAwesomeIcon
+                  icon={faTrashAlt}
+                  onClick={() => showModal("delete", transaction)}
+                />
               </td>
             </tr>
           ))}

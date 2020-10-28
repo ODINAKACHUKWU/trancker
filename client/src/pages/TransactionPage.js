@@ -11,12 +11,7 @@ import "../assets/stylesheets/pages/transaction-page.scss";
 
 function TransactionPage() {
   const [ShowModal, setShowModal] = useState(false);
-  const {
-    transaction,
-    transactions,
-    fetchingTransactions,
-    error,
-  } = useSelector((state) => state.transaction);
+  const { transaction, message } = useSelector((state) => state.transaction);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -64,10 +59,12 @@ function TransactionPage() {
               The transaction was successfully recorded.
             </div>
           )}
-          {error && <div className="alert alert-danger">{error}</div>}
+          {!isEmpty(message) && (
+            <div className="alert alert-success">{message}</div>
+          )}
         </div>
       </div>
-      <Transactions data={transactions} fetching={fetchingTransactions} />
+      <Transactions />
     </Fragment>
   );
 

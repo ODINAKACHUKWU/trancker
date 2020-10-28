@@ -10,6 +10,9 @@ const {
   DELETE_TRANSACTION_SUCCESS,
   DELETE_TRANSACTION_FAILURE,
   DELETING_TRANSACTION,
+  UPDATE_TRANSACTION_SUCCESS,
+  UPDATE_TRANSACTION_FAILURE,
+  UPDATING_TRANSACTION,
 } = TYPES;
 
 const initialState = {
@@ -68,6 +71,21 @@ export default (state = initialState, action) => {
       return {
         ...state,
         deletingTransaction: action.bool,
+      };
+    case UPDATE_TRANSACTION_SUCCESS:
+      return {
+        ...state,
+        message: action.message,
+      };
+    case UPDATE_TRANSACTION_FAILURE:
+      return {
+        ...state,
+        error: action.error,
+      };
+    case UPDATING_TRANSACTION:
+      return {
+        ...state,
+        updatingTransaction: action.bool,
       };
     default:
       return state;

@@ -13,6 +13,9 @@ const {
   DELETING_TRANSACTION,
   DELETE_TRANSACTION_FAILURE,
   DELETE_TRANSACTION_SUCCESS,
+  UPDATE_TRANSACTION_SUCCESS,
+  UPDATE_TRANSACTION_FAILURE,
+  UPDATING_TRANSACTION,
 } = TYPES;
 
 const submittingTransaction = (bool) => ({
@@ -61,17 +64,17 @@ const deleteTransactionFailure = (error) => ({
 });
 
 const updatingTransaction = (bool) => ({
-  type: DELETING_TRANSACTION,
+  type: UPDATING_TRANSACTION,
   bool,
 });
 
 const updateTransactionSuccess = (message) => ({
-  type: DELETE_TRANSACTION_SUCCESS,
+  type: UPDATE_TRANSACTION_SUCCESS,
   message,
 });
 
 const updateTransactionFailure = (error) => ({
-  type: DELETE_TRANSACTION_FAILURE,
+  type: UPDATE_TRANSACTION_FAILURE,
   error,
 });
 

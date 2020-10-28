@@ -117,6 +117,7 @@ function AddContributionForm(props) {
             value={Amount}
             onChange={(e) => setAmount(e.target.value)}
             onFocus={handleFocus}
+            step=".01"
             required
           />
           <small id="payeeNameHelp" className="form-text text-muted">

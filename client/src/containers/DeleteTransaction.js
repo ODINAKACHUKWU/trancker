@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import isEmpty from "is-empty";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,7 +14,7 @@ function DeleteTransaction(props) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!isEmpty(message)) {
+    if (message === "Transaction was deleted successfully.") {
       dispatch(fetchTransactions());
       props.handleClose();
     }

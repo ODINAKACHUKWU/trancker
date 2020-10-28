@@ -13,11 +13,15 @@ const {
   UPDATE_TRANSACTION_SUCCESS,
   UPDATE_TRANSACTION_FAILURE,
   UPDATING_TRANSACTION,
+  FETCHING_TRANSACTION,
+  FETCH_TRANSACTION_SUCCESS,
+  FETCH_TRANSACTION_FAILURE,
 } = TYPES;
 
 const initialState = {
   submittingTransaction: false,
   fetchingTransactions: false,
+  fetchingTransaction: false,
   deletingTransaction: false,
   transaction: {},
   transactions: [],
@@ -86,6 +90,21 @@ export default (state = initialState, action) => {
       return {
         ...state,
         updatingTransaction: action.bool,
+      };
+    case FETCHING_TRANSACTION:
+      return {
+        ...state,
+        fetchingTransaction: action.bool,
+      };
+    case FETCH_TRANSACTIONS_SUCCESS:
+      return {
+        ...state,
+        transaction: action.transaction,
+      };
+    case FETCH_TRANSACTION_FAILURE:
+      return {
+        ...state,
+        error: action.error,
       };
     default:
       return state;

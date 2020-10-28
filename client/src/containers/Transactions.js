@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-regular-svg-icons";
 import Modal from "../containers/Modal";
@@ -78,9 +78,9 @@ function Transactions(props) {
   //   };
 
   //   let transactions = Data[CurrentPage - 1];
-  console.log("-------", Data[CurrentPage - 1]);
-  console.log("-------", CurrentPage);
-  console.log("-------", Data);
+  //   console.log("-------", Data[CurrentPage - 1]);
+  //   console.log("-------", CurrentPage);
+  //   console.log("-------", Data);
 
   const element = () => {
     switch (Action) {
@@ -89,6 +89,21 @@ function Transactions(props) {
       case "delete":
         return <DeleteTransaction handleClose={hideModal} data={Transaction} />;
     }
+  };
+
+  const formatAmount = (amount) => {
+    return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
+  const formatDate = (date) => {
+    const options = {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+
+    return new Date(date).toLocaleDateString("en-US", options);
   };
 
   return (
@@ -100,7 +115,9 @@ function Transactions(props) {
         <thead>
           <tr>
             <th scope="col">Payee</th>
-            <th scope="col">Amount</th>
+            <th scope="col">
+              Amount <span>(&#8358;)</span>
+            </th>
             <th scope="col">Date</th>
             <th scope="col">Action</th>
           </tr>
@@ -109,8 +126,8 @@ function Transactions(props) {
           {transactions.map((transaction) => (
             <tr key={transaction.id} className="table-row" role="button">
               <th scope="row">{transaction.payee_name}</th>
-              <td>{transaction.amount}</td>
-              <td>{transaction.contribution_date}</td>
+              <td>{formatAmount(transaction.amount)}</td>
+              <td>{formatDate(transaction.contribution_date)}</td>
               <td>
                 <FontAwesomeIcon
                   icon={faEdit}

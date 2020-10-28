@@ -16,6 +16,9 @@ const {
   UPDATE_TRANSACTION_SUCCESS,
   UPDATE_TRANSACTION_FAILURE,
   UPDATING_TRANSACTION,
+  FETCHING_TRANSACTION,
+  FETCH_TRANSACTION_SUCCESS,
+  FETCH_TRANSACTION_FAILURE,
 } = TYPES;
 
 const submittingTransaction = (bool) => ({
@@ -78,6 +81,21 @@ const updateTransactionFailure = (error) => ({
   error,
 });
 
+const fetchingTransaction = (bool) => ({
+  type: FETCHING_TRANSACTION,
+  bool,
+});
+
+const fetchTransactionSuccess = (transaction) => ({
+  type: FETCH_TRANSACTION_SUCCESS,
+  transaction,
+});
+
+const fetchTransactionFailure = (error) => ({
+  type: FETCH_TRANSACTION_FAILURE,
+  error,
+});
+
 const recordTransaction = (data) => async (dispatch) => {
   dispatch(submittingTransaction(true));
   try {
@@ -134,7 +152,22 @@ const updateTransaction = (id, data) => async (dispatch) => {
   }
 };
 
+const fetchTransaction = (id) => async (dispatch) => {
+  dispatch(fetchingTransaction(true));
+  try {
+    const url = `${BASE_URL}/transactions/${id}`;
+    const response = await axios.get(url);
+    const transaction = response.data;
+    dispatch(fetchTransactionSuccess(transaction));
+  } catch (error) {
+    dispatch(fetchTransactionFailure(error.message));
+  } finally {
+    dispatch(fetchingTransaction(false));
+  }
+};
+
 export {
+  fetchTransaction,
   recordTransaction,
   fetchTransactions,
   deleteTransaction,

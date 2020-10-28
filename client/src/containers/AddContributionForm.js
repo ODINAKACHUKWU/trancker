@@ -24,6 +24,12 @@ function AddContributionForm(props) {
       dispatch(fetchTransactions());
       props.handleClose();
     }
+    return () => {
+      setPayee("");
+      setContributionDate("");
+      setAmount("");
+      setMemo("");
+    };
   }, [transaction]);
 
   const isValid = (data) => {
@@ -121,8 +127,7 @@ function AddContributionForm(props) {
             required
           />
           <small id="payeeNameHelp" className="form-text text-muted">
-            Minimum amount is <span>&#8358;</span>50 and only multiples of 50
-            are allowed.
+            Minimum amount of <span>&#8358;</span>50 is required.
           </small>
         </div>
         {Errors.amount && (

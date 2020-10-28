@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   updateTransaction,
   fetchTransactions,
+  fetchTransaction,
 } from "../actions/creators/transactionActions";
 import { updateTransactionValidator } from "../helpers/validator";
 
@@ -16,15 +17,25 @@ function UpdateTransaction(props) {
   );
   const [Amount, setAmount] = useState(props.data.amount);
   const [Memo, setMemo] = useState(props.data.memo);
-  const [Errors, setErrors] = useState({});
   const { error, message } = useSelector((state) => state.transaction);
+  const [Errors, setErrors] = useState({});
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!isEmpty(message)) {
+    console.log(">>>>>>>", props.data);
+  });
+
+  useEffect(() => {
+    if (message === "Transaction was updated successfully.") {
       dispatch(fetchTransactions());
       props.handleClose();
     }
+    return () => {
+      setPayee("");
+      setContributionDate("");
+      setAmount("");
+      setMemo("");
+    };
   }, [message]);
 
   const isValid = (data) => {
@@ -112,8 +123,7 @@ function UpdateTransaction(props) {
             required
           />
           <small id="payeeNameHelp" className="form-text text-muted">
-            Minimum amount is <span>&#8358;</span>50 and only multiples of 50
-            are allowed.
+            Minimum amount of <span>&#8358;</span>50 is required.
           </small>
         </div>
         {Errors.amount && (

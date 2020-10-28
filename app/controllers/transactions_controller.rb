@@ -14,6 +14,10 @@ class TransactionsController < ApplicationController
     end
   end
 
+  def show
+    render json: @transaction, status: :ok
+  end
+
   def update
     @transaction.update(transaction_params)
     render json: { message: 'Transaction was updated successfully.' }, status: :ok

@@ -6,22 +6,19 @@ import {
   deleteTransaction,
   fetchTransactions,
 } from "../actions/creators/transactionActions";
+import { formatAmount, formatDate } from "../helpers/format";
 
 import "../assets/stylesheets/containers/delete-transaction.scss";
 
 function DeleteTransaction(props) {
-  const { error, message } = useSelector((state) => state.transaction);
+  const { error, transactions } = useSelector((state) => state.transaction);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (message === "Transaction was deleted successfully.") {
-      dispatch(fetchTransactions());
-      props.handleClose();
-    }
-  }, [message]);
-
   const handleClick = (id) => {
-    dispatch(deleteTransaction(id));
+    dispatch(deleteTransaction(id)).then(() => {
+      dispatch(fetchTransactions(transactions.meta.current_page));
+      props.handleClose();
+    });
   };
 
   return (
@@ -39,12 +36,12 @@ function DeleteTransaction(props) {
       </div>
       <div className="mb-2">
         <span className="font-weight-bold mr-3"> Contribution Date:</span>
-        {props.data.contribution_date}
+        {formatDate(props.data.contribution_date)}
       </div>
       <div className="mb-2">
         <span className="font-weight-bold mr-3"> Amount:</span>
         <span>&#8358;</span>
-        {props.data.amount}
+        {formatAmount(props.data.amount)}
       </div>
       {props.data.memo && (
         <div className="mb-2">

@@ -19,6 +19,7 @@ const {
   FETCHING_TRANSACTION,
   FETCH_TRANSACTION_SUCCESS,
   FETCH_TRANSACTION_FAILURE,
+  SET_TRANSACTION_SUCCESS_MESSAGE,
 } = TYPES;
 
 const submittingTransaction = (bool) => ({
@@ -96,13 +97,18 @@ const fetchTransactionFailure = (error) => ({
   error,
 });
 
+const setTransactionSuccessMessage = (message) => ({
+  type: SET_TRANSACTION_SUCCESS_MESSAGE,
+  message,
+});
+
 const recordTransaction = (data) => async (dispatch) => {
   dispatch(submittingTransaction(true));
   try {
     const url = `${BASE_URL}/transactions`;
     const response = await axios.post(url, data);
-    const transaction = response.data;
-    dispatch(submitTransactionSuccess(transaction));
+    dispatch(submitTransactionSuccess(response.data.data));
+    dispatch(setTransactionSuccessMessage(response.data.message));
   } catch (error) {
     dispatch(submitTransactionFailure(error.message));
   } finally {
@@ -110,10 +116,10 @@ const recordTransaction = (data) => async (dispatch) => {
   }
 };
 
-const fetchTransactions = () => async (dispatch) => {
+const fetchTransactions = (page) => async (dispatch) => {
   dispatch(fetchingTransactions(true));
   try {
-    const url = `${BASE_URL}/transactions`;
+    const url = `${BASE_URL}/transactions?page=${page}`;
     const response = await axios.get(url);
     const transactions = response.data;
     dispatch(fetchTransactionsSuccess(transactions));

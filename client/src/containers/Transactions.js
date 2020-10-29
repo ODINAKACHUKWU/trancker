@@ -5,24 +5,24 @@ import { faEdit, faTrashAlt } from "@fortawesome/free-regular-svg-icons";
 import Modal from "../containers/Modal";
 import DeleteTransaction from "../containers/DeleteTransaction";
 import UpdateTransaction from "../containers/UpdateTransaction";
+import { fetchTransactions } from "../actions/creators/transactionActions";
+import { formatAmount, formatDate } from "../helpers/format";
 
 import "../assets/stylesheets/containers/transactions.scss";
 import "../assets/stylesheets/pages/transaction-page.scss";
 
-function Transactions(props) {
+function Transactions() {
   const [TotalCount, setTotalCount] = useState(0);
-  const [Offset, setOffset] = useState(0);
-  const [Data, setData] = useState([]);
-  const [PerPage, setPerPage] = useState(15);
-  let [CurrentPage, setCurrentPage] = useState(0);
-  const [ItemCount, setItemCount] = useState(0);
-  const [PageCount, setPageCount] = useState(0);
-  const [NextPage, setNextPage] = useState(false);
-  const [PreviousPage, setPreviousPage] = useState(false);
+  const [CurrentPage, setCurrentPage] = useState(0);
+  const [TotalPages, setTotalPages] = useState(0);
+  const [NextPage, setNextPage] = useState(null);
+  const [PreviousPage, setPreviousPage] = useState(null);
   const { transactions } = useSelector((state) => state.transaction);
   const [ShowModal, setShowModal] = useState(false);
   const [Action, setAction] = useState("");
   const [Transaction, setTransaction] = useState({});
+  const [Transactions, setTransactions] = useState([]);
+  const dispatch = useDispatch();
 
   const showModal = (action, transaction) => {
     setAction(action);
@@ -35,52 +35,36 @@ function Transactions(props) {
   };
 
   useEffect(() => {
-    const pages = [];
-    const pageTransactions = transactions.slice(Offset, Offset + PerPage);
-    pages.push(pageTransactions);
-    const totalCount = transactions.length;
-    CurrentPage += 1;
-    const nextPage = Offset < totalCount ? true : false;
-    const previousPage = CurrentPage > 1 ? true : false;
-    setTotalCount(totalCount);
-    setPageCount(Math.ceil(totalCount / PerPage));
-    setData(pages);
-    setItemCount(pageTransactions.length);
-    setCurrentPage(CurrentPage);
-    setOffset(pageTransactions.length);
-    setNextPage(nextPage);
-    setPreviousPage(previousPage);
-  }, [props.data]);
+    if (transactions.meta) {
+      const {
+        current_page,
+        total_count,
+        next_page,
+        prev_page,
+        total_pages,
+      } = transactions.meta;
+      setCurrentPage(current_page);
+      setTotalCount(total_count);
+      setNextPage(next_page);
+      setPreviousPage(prev_page);
+      setTotalPages(total_pages);
+      setTransactions(transactions.data);
 
-  //   componentDidMount = () => {
-  //     const { fetchPlanets } = this.props;
-  //     fetchPlanets("planets").then(() => {
-  //       const pages = [];
-  //       const { planets } = this.props;
-  //       let { offset, perPage, currentPage } = this.state;
-  //       const pagePlanets = planets.slice(offset, offset + perPage);
-  //       pages.push(pagePlanets);
-  //       const totalCount = planets.length;
-  //       currentPage += 1;
-  //       const nextPage = offset < totalCount ? true : false;
-  //       const previousPage = currentPage > 1 ? true : false;
-  //       this.setState({
-  //         totalCount: totalCount,
-  //         pageCount: Math.ceil(planets.length / perPage),
-  //         data: pages,
-  //         itemCount: pagePlanets.length,
-  //         currentPage: currentPage,
-  //         offset: pagePlanets.length,
-  //         nextPage: nextPage,
-  //         previousPage: previousPage,
-  //       });
-  //     });
-  //   };
+      window.history.pushState(
+        { page: current_page },
+        `Page ${current_page}`,
+        `?page=${current_page}`
+      );
+    }
+  }, [transactions]);
 
-  //   let transactions = Data[CurrentPage - 1];
-  //   console.log("-------", Data[CurrentPage - 1]);
-  //   console.log("-------", CurrentPage);
-  //   console.log("-------", Data);
+  const handleNext = () => {
+    dispatch(fetchTransactions(NextPage));
+  };
+
+  const handlePrev = () => {
+    dispatch(fetchTransactions(PreviousPage));
+  };
 
   const element = () => {
     switch (Action) {
@@ -91,25 +75,20 @@ function Transactions(props) {
     }
   };
 
-  const formatAmount = (amount) => {
-    return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
-
-  const formatDate = (date) => {
-    const options = {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    };
-
-    return new Date(date).toLocaleDateString("en-US", options);
-  };
-
   return (
     <div>
       <div className="row">
         <Modal show={ShowModal} handleClose={hideModal} component={element()} />
+      </div>
+      <div className="row mt-3 d-flex justify-content-between mb-2">
+        <small>{`${formatAmount(TotalCount)} Transaction${
+          TotalCount > 1 ? "s" : ""
+        }`}</small>
+        <small>
+          {`${formatAmount(CurrentPage)} of ${formatAmount(TotalPages)} page${
+            TotalPages > 1 ? "s" : ""
+          }`}
+        </small>
       </div>
       <table className="table table-striped">
         <thead>
@@ -123,31 +102,42 @@ function Transactions(props) {
           </tr>
         </thead>
         <tbody>
-          {transactions.map((transaction) => (
-            <tr key={transaction.id} className="table-row" role="button">
-              <th scope="row">{transaction.payee_name}</th>
-              <td>{formatAmount(transaction.amount)}</td>
-              <td>{formatDate(transaction.contribution_date)}</td>
-              <td>
-                <FontAwesomeIcon
-                  icon={faEdit}
-                  onClick={() => showModal("modify", transaction)}
-                  className="mr-3"
-                />
-                <FontAwesomeIcon
-                  icon={faTrashAlt}
-                  onClick={() => showModal("delete", transaction)}
-                />
-              </td>
-            </tr>
-          ))}
+          {Transactions &&
+            Transactions.map((transaction) => (
+              <tr key={transaction.id} className="table-row" role="button">
+                <th scope="row">{transaction.payee_name}</th>
+                <td>{formatAmount(transaction.amount)}</td>
+                <td>{formatDate(transaction.contribution_date)}</td>
+                <td>
+                  <FontAwesomeIcon
+                    icon={faEdit}
+                    onClick={() => showModal("modify", transaction)}
+                    className="mr-3"
+                  />
+                  <FontAwesomeIcon
+                    icon={faTrashAlt}
+                    onClick={() => showModal("delete", transaction)}
+                  />
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
       <div className="row d-flex justify-content-end">
-        <button role="button" className="btn btn-brown mr-3" disabled>
+        <button
+          role="button"
+          className="btn btn-brown mr-3"
+          disabled={PreviousPage ? false : true}
+          onClick={handlePrev}
+        >
           {"<"}
         </button>
-        <button role="button" className="btn btn-brown" disabled>
+        <button
+          role="button"
+          className="btn btn-brown"
+          disabled={NextPage ? false : true}
+          onClick={handleNext}
+        >
           {">"}
         </button>
       </div>

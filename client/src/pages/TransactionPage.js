@@ -11,10 +11,21 @@ import "../assets/stylesheets/pages/transaction-page.scss";
 
 function TransactionPage() {
   const [ShowModal, setShowModal] = useState(false);
-  const { transaction, message, transactions } = useSelector(
-    (state) => state.transaction
-  );
+  const [Message, setMessage] = useState("");
+  const { message, transactions } = useSelector((state) => state.transaction);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    setMessage(message);
+    setTimeout(() => {
+      if (message) {
+        setMessage("");
+      }
+    }, 5000);
+    return () => {
+      setMessage("");
+    };
+  }, [message]);
 
   useEffect(() => {
     if (isEmpty(transactions)) dispatch(fetchTransactions(1));
@@ -32,9 +43,9 @@ function TransactionPage() {
 
   const transactionsComponent = (
     <Fragment>
-      <div className="row mb-3">
+      <div className="row d-flex justify-content-between mb-3">
         <h3>Transactions</h3>
-        <div className="ml-auto">
+        <div>
           <button type="button" className="btn btn-brown mr-2">
             Download PDF
           </button>
@@ -54,18 +65,13 @@ function TransactionPage() {
           component={addContribution}
         />
       </div>
-      <div className="container">
-        <div className="row">
-          {!isEmpty(transaction) && (
-            <div className="alert alert-success">
-              The transaction was successfully recorded.
-            </div>
-          )}
-          {!isEmpty(message) && (
-            <div className="alert alert-success">{message}</div>
-          )}
-        </div>
+
+      <div className="row">
+        {Message && (
+          <div className="alert alert-success alert-message">{Message}</div>
+        )}
       </div>
+
       <Transactions />
     </Fragment>
   );

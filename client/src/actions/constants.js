@@ -16,6 +16,7 @@ const TYPES = keymirror({
   FETCHING_TRANSACTION: null,
   FETCH_TRANSACTION_SUCCESS: null,
   FETCH_TRANSACTION_FAILURE: null,
+  SET_TRANSACTION_SUCCESS_MESSAGE: null,
 });
 
 export default TYPES;

@@ -16,6 +16,7 @@ const {
   FETCHING_TRANSACTION,
   FETCH_TRANSACTION_SUCCESS,
   FETCH_TRANSACTION_FAILURE,
+  SET_TRANSACTION_SUCCESS_MESSAGE,
 } = TYPES;
 
 const initialState = {
@@ -96,7 +97,7 @@ export default (state = initialState, action) => {
         ...state,
         fetchingTransaction: action.bool,
       };
-    case FETCH_TRANSACTIONS_SUCCESS:
+    case FETCH_TRANSACTION_SUCCESS:
       return {
         ...state,
         transaction: action.transaction,
@@ -105,6 +106,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         error: action.error,
+      };
+    case SET_TRANSACTION_SUCCESS_MESSAGE:
+      return {
+        ...state,
+        message: action.message,
       };
     default:
       return state;

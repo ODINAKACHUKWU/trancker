@@ -16,12 +16,14 @@ function AddContributionForm(props) {
   const [Amount, setAmount] = useState("");
   const [Memo, setMemo] = useState("");
   const [Errors, setErrors] = useState({});
-  const { error, transaction } = useSelector((state) => state.transaction);
+  const { error, transaction, transactions } = useSelector(
+    (state) => state.transaction
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (!isEmpty(transaction)) {
-      dispatch(fetchTransactions());
+      dispatch(fetchTransactions(transactions.meta.current_page));
       props.handleClose();
     }
     return () => {

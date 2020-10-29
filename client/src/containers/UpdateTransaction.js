@@ -11,32 +11,28 @@ import { updateTransactionValidator } from "../helpers/validator";
 import "../assets/stylesheets/containers/update-transaction.scss";
 
 function UpdateTransaction(props) {
-  const [Payee, setPayee] = useState(props.data.payee_name);
-  const [ContributionDate, setContributionDate] = useState(
-    props.data.contribution_date
-  );
-  const [Amount, setAmount] = useState(props.data.amount);
-  const [Memo, setMemo] = useState(props.data.memo);
-  const { error, message } = useSelector((state) => state.transaction);
-  const [Errors, setErrors] = useState({});
   const dispatch = useDispatch();
+  //   const [Id, setId] = useState(props.data.id);
+  const [Payee, setPayee] = useState("");
+  const [ContributionDate, setContributionDate] = useState("");
+  const [Amount, setAmount] = useState("");
+  const [Memo, setMemo] = useState("");
+  const { error, transactions, transaction } = useSelector(
+    (state) => state.transaction
+  );
+  const [Errors, setErrors] = useState({});
 
-  useEffect(() => {
-    console.log(">>>>>>>", props.data);
-  });
+  //   useEffect(() => {
+  //     if (props.data.id === Id || isEmpty(transaction)) {
+  //       console.log("========", props.data.id);
+  //       dispatch(fetchTransaction(props.data.id));
+  //     }
+  //     // console.log(">>>>>>>");
+  //   });
 
-  useEffect(() => {
-    if (message === "Transaction was updated successfully.") {
-      dispatch(fetchTransactions());
-      props.handleClose();
-    }
-    return () => {
-      setPayee("");
-      setContributionDate("");
-      setAmount("");
-      setMemo("");
-    };
-  }, [message]);
+  //   useEffect(() => {
+  //     console.log(">>>>>>>", transaction);
+  //   }, [transaction]);
 
   const isValid = (data) => {
     const { errors, isValid } = updateTransactionValidator(data);
@@ -57,7 +53,10 @@ function UpdateTransaction(props) {
     };
 
     if (isValid(data)) {
-      dispatch(updateTransaction(props.data.id, data));
+      dispatch(updateTransaction(props.data.id, data)).then(() => {
+        dispatch(fetchTransactions(transactions.meta.current_page));
+        props.handleClose();
+      });
     }
   };
 
@@ -77,7 +76,7 @@ function UpdateTransaction(props) {
             type="text"
             className="form-control"
             id="payeeName"
-            value={Payee}
+            value={props.data.payee_name}
             onChange={(e) => setPayee(e.target.value)}
             onFocus={handleFocus}
             required

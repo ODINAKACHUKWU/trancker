@@ -11,7 +11,7 @@ import { formatAmount, formatDate } from "../helpers/format";
 import "../assets/stylesheets/containers/transactions.scss";
 import "../assets/stylesheets/pages/transaction-page.scss";
 
-function Transactions(props) {
+function Transactions() {
   const [TotalCount, setTotalCount] = useState(0);
   const [CurrentPage, setCurrentPage] = useState(0);
   const [TotalPages, setTotalPages] = useState(0);

@@ -10,7 +10,7 @@ class TransactionsController < ApplicationController
     @transaction = Transaction.new(transaction_params)
 
     if @transaction.save
-      render json: @transaction, status: :created
+      render json: { message: 'The transaction was successfully recorded.', data: @transaction }, status: :created
     end
   end
 

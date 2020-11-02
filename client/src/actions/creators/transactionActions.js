@@ -24,7 +24,10 @@ const {
   FETCH_REPORT_FAILURE,
   SET_TRANSACTION_SUCCESS_MESSAGE,
   SET_REPORT_SUMMARY,
+  RESET_MESSAGE,
 } = TYPES;
+
+const resetMessage = (message) => ({ type: RESET_MESSAGE, message });
 
 const setReportSummary = (summary) => ({
   type: SET_REPORT_SUMMARY,
@@ -232,4 +235,5 @@ export {
   deleteTransaction,
   updateTransaction,
   fetchReport,
+  resetMessage,
 };

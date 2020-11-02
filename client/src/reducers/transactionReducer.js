@@ -21,6 +21,7 @@ const {
   FETCH_REPORT_SUCCESS,
   FETCH_REPORT_FAILURE,
   SET_REPORT_SUMMARY,
+  RESET_MESSAGE,
 } = TYPES;
 
 const initialState = {
@@ -138,6 +139,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         summary: action.summary,
+      };
+    case RESET_MESSAGE:
+      return {
+        ...state,
+        message: action.message,
       };
     default:
       return state;

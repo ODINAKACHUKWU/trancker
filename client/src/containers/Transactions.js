@@ -5,6 +5,7 @@ import { faEdit, faTrashAlt } from "@fortawesome/free-regular-svg-icons";
 import Modal from "../containers/Modal";
 import DeleteTransaction from "../containers/DeleteTransaction";
 import UpdateTransaction from "../containers/UpdateTransaction";
+import ViewTransaction from "../containers/ViewTransaction";
 import { fetchTransactions } from "../actions/creators/transactionActions";
 import { formatAmount, formatDate } from "../helpers/format";
 
@@ -55,6 +56,9 @@ function Transactions() {
         `Page ${current_page}`,
         `?page=${current_page}`
       );
+      if (transactions.data.length < 15) {
+        document.getElementById("footer").style.position = "fixed";
+      }
     }
   }, [transactions]);
 
@@ -72,6 +76,8 @@ function Transactions() {
         return <UpdateTransaction handleClose={hideModal} data={Transaction} />;
       case "delete":
         return <DeleteTransaction handleClose={hideModal} data={Transaction} />;
+      case "view":
+        return <ViewTransaction handleClose={hideModal} data={Transaction} />;
     }
   };
 
@@ -104,11 +110,27 @@ function Transactions() {
         <tbody>
           {Transactions &&
             Transactions.map((transaction) => (
-              <tr key={transaction.id} className="table-row" role="button">
-                <th scope="row">{transaction.payee_name}</th>
-                <td>{formatAmount(transaction.amount)}</td>
-                <td>{formatDate(transaction.contribution_date)}</td>
-                <td>
+              <tr key={transaction.id} className="table-row">
+                <th
+                  scope="row"
+                  role="button"
+                  onClick={() => showModal("view", transaction)}
+                >
+                  {transaction.payee_name}
+                </th>
+                <td
+                  role="button"
+                  onClick={() => showModal("view", transaction)}
+                >
+                  {formatAmount(transaction.amount)}
+                </td>
+                <td
+                  role="button"
+                  onClick={() => showModal("view", transaction)}
+                >
+                  {formatDate(transaction.contribution_date)}
+                </td>
+                <td role="button">
                   <FontAwesomeIcon
                     icon={faEdit}
                     onClick={() => showModal("modify", transaction)}

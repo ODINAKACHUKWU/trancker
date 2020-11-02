@@ -21,6 +21,7 @@ const TYPES = keymirror({
   FETCH_REPORT_FAILURE: null,
   SET_TRANSACTION_SUCCESS_MESSAGE: null,
   SET_REPORT_SUMMARY: null,
+  RESET_MESSAGE: null,
 });
 
 export default TYPES;

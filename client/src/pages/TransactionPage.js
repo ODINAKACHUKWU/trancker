@@ -4,7 +4,10 @@ import isEmpty from "is-empty";
 import Layout from "../containers/Layout";
 import Modal from "../containers/Modal";
 import AddContributionForm from "../containers/AddContributionForm";
-import { fetchTransactions } from "../actions/creators/transactionActions";
+import {
+  fetchTransactions,
+  resetMessage,
+} from "../actions/creators/transactionActions";
 import Transactions from "../containers/Transactions";
 
 import "../assets/stylesheets/pages/transaction-page.scss";
@@ -19,7 +22,7 @@ function TransactionPage() {
     setMessage(message);
     setTimeout(() => {
       if (message) {
-        setMessage("");
+        dispatch(resetMessage(""));
       }
     }, 5000);
     return () => {
@@ -68,7 +71,7 @@ function TransactionPage() {
 
       <div className="row">
         <div className="col-12">
-          {Message && (
+          {Message.length > 0 && (
             <div className="alert alert-success alert-message">{Message}</div>
           )}
         </div>

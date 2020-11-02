@@ -17,15 +17,22 @@ const {
   FETCH_TRANSACTION_SUCCESS,
   FETCH_TRANSACTION_FAILURE,
   SET_TRANSACTION_SUCCESS_MESSAGE,
+  FETCHING_REPORT,
+  FETCH_REPORT_SUCCESS,
+  FETCH_REPORT_FAILURE,
+  SET_REPORT_SUMMARY,
 } = TYPES;
 
 const initialState = {
   submittingTransaction: false,
   fetchingTransactions: false,
   fetchingTransaction: false,
+  fetchingReport: false,
   deletingTransaction: false,
   transaction: {},
-  transactions: [],
+  transactions: {},
+  report: [],
+  summary: {},
   message: "",
   error: "",
 };
@@ -107,10 +114,30 @@ export default (state = initialState, action) => {
         ...state,
         error: action.error,
       };
+    case FETCHING_REPORT:
+      return {
+        ...state,
+        fetchingReport: action.bool,
+      };
+    case FETCH_REPORT_SUCCESS:
+      return {
+        ...state,
+        report: action.report,
+      };
+    case FETCH_REPORT_FAILURE:
+      return {
+        ...state,
+        error: action.error,
+      };
     case SET_TRANSACTION_SUCCESS_MESSAGE:
       return {
         ...state,
         message: action.message,
+      };
+    case SET_REPORT_SUMMARY:
+      return {
+        ...state,
+        summary: action.summary,
       };
     default:
       return state;

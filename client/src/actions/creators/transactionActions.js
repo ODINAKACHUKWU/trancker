@@ -19,8 +19,17 @@ const {
   FETCHING_TRANSACTION,
   FETCH_TRANSACTION_SUCCESS,
   FETCH_TRANSACTION_FAILURE,
+  FETCHING_REPORT,
+  FETCH_REPORT_SUCCESS,
+  FETCH_REPORT_FAILURE,
   SET_TRANSACTION_SUCCESS_MESSAGE,
+  SET_REPORT_SUMMARY,
 } = TYPES;
+
+const setReportSummary = (summary) => ({
+  type: SET_REPORT_SUMMARY,
+  summary,
+});
 
 const submittingTransaction = (bool) => ({
   type: SUBMITTING_TRANSACTION,
@@ -94,6 +103,21 @@ const fetchTransactionSuccess = (transaction) => ({
 
 const fetchTransactionFailure = (error) => ({
   type: FETCH_TRANSACTION_FAILURE,
+  error,
+});
+
+const fecthingReport = (bool) => ({
+  type: FETCHING_REPORT,
+  bool,
+});
+
+const fetchReportSuccess = (report) => ({
+  type: FETCH_REPORT_SUCCESS,
+  report,
+});
+
+const fetchReportFailure = (error) => ({
+  type: FETCH_REPORT_FAILURE,
   error,
 });
 
@@ -172,10 +196,40 @@ const fetchTransaction = (id) => async (dispatch) => {
   }
 };
 
+const fetchReport = (year, span) => async (dispatch) => {
+  dispatch(fecthingReport(true));
+  try {
+    const url = `${BASE_URL}/report?year=${year}&span=${span}`;
+    const response = await axios.get(url);
+    const report = response.data;
+    const meta = composeMetaData(response.headers);
+    dispatch(fetchReportSuccess(report));
+    dispatch(setReportSummary(meta));
+  } catch (error) {
+    dispatch(fetchReportFailure(error.message));
+  } finally {
+    dispatch(fecthingReport(false));
+  }
+};
+
+const composeMetaData = (object) => {
+  const meta = {};
+  meta.year = object.year;
+  meta.span = object.span;
+  meta.total = object.total;
+  meta.prev_year_total = object.previous_year_total;
+  meta.current_year_total = object.current_year_total;
+  meta.current_month_total = object.current_month_total;
+  meta.total_transactions = object.total_transactions;
+  meta.prev_month_total = object.previous_month_total;
+  return meta;
+};
+
 export {
   fetchTransaction,
   recordTransaction,
   fetchTransactions,
   deleteTransaction,
   updateTransaction,
+  fetchReport,
 };

@@ -76,7 +76,7 @@ function Transactions() {
   };
 
   return (
-    <div>
+    <div className="mb-4">
       <div className="row">
         <Modal show={ShowModal} handleClose={hideModal} component={element()} />
       </div>

@@ -17,6 +17,7 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors, debug: true, lo
     resource '*',
       headers: :any,
       methods: [:get, :post, :put, :patch, :delete, :options, :head],
+      expose: ['Year', 'Span', 'Total', 'Previous_Year_Total', 'Current_Year_Total', 'Current_Month_Total', 'Total_Transactions', 'Previous_Month_Total'],
       max_age: 0
   end
 end

@@ -1,12 +1,12 @@
-import React from "react";
+import React, { Fragment } from "react";
 import Layout from "../containers/Layout";
 
 function AboutPage() {
   const about = (
-    <div>
+    <Fragment>
       <h1>About</h1>
       <p>This is the about page</p>
-    </div>
+    </Fragment>
   );
 
   return <Layout component={about} />;

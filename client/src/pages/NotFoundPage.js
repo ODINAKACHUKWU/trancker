@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const NotFoundPage = () => {
   return (
-    <div className="mt-5">
+    <div className="container mt-5">
       <h2 className="text-center">Oops! The page was not found</h2>
       <p className="text-center">
         You can click the menu icon on the <Link to="/">home page</Link> to see

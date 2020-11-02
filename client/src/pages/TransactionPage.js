@@ -67,9 +67,11 @@ function TransactionPage() {
       </div>
 
       <div className="row">
-        {Message && (
-          <div className="alert alert-success alert-message">{Message}</div>
-        )}
+        <div className="col-12">
+          {Message && (
+            <div className="alert alert-success alert-message">{Message}</div>
+          )}
+        </div>
       </div>
 
       <Transactions />

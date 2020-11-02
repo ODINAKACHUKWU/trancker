@@ -2,7 +2,7 @@ class TransactionsController < ApplicationController
   before_action :set_transaction, only: [:show, :update, :destroy]
 
   def index
-    @transactions = Transaction.order(contribution_date: :desc).page(params[:page] ? params[:page].to_i : 1)
+    @transactions = Transaction.order(created_at: :desc).page(params[:page] ? params[:page].to_i : 1)
     render json: { meta: pagination_meta(@transactions), data: @transactions }, status: :ok
   end
 

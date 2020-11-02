@@ -12,7 +12,6 @@ import "../assets/stylesheets/containers/update-transaction.scss";
 
 function UpdateTransaction(props) {
   const dispatch = useDispatch();
-  //   const [Id, setId] = useState(props.data.id);
   const [Payee, setPayee] = useState("");
   const [ContributionDate, setContributionDate] = useState("");
   const [Amount, setAmount] = useState("");
@@ -22,17 +21,20 @@ function UpdateTransaction(props) {
   );
   const [Errors, setErrors] = useState({});
 
-  //   useEffect(() => {
-  //     if (props.data.id === Id || isEmpty(transaction)) {
-  //       console.log("========", props.data.id);
-  //       dispatch(fetchTransaction(props.data.id));
-  //     }
-  //     // console.log(">>>>>>>");
-  //   });
+  useEffect(() => {
+    if (transaction.id !== props.data.id) {
+      dispatch(fetchTransaction(props.data.id));
+    }
+  });
 
-  //   useEffect(() => {
-  //     console.log(">>>>>>>", transaction);
-  //   }, [transaction]);
+  useEffect(() => {
+    if (!isEmpty(transaction)) {
+      setPayee(transaction.payee_name);
+      setContributionDate(transaction.contribution_date);
+      setAmount(transaction.amount);
+      setMemo(transaction.memo);
+    }
+  }, [transaction]);
 
   const isValid = (data) => {
     const { errors, isValid } = updateTransactionValidator(data);
@@ -76,7 +78,7 @@ function UpdateTransaction(props) {
             type="text"
             className="form-control"
             id="payeeName"
-            value={props.data.payee_name}
+            value={Payee}
             onChange={(e) => setPayee(e.target.value)}
             onFocus={handleFocus}
             required

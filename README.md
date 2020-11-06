@@ -2,7 +2,7 @@
 
 This is a Contribution Tracker app to track the various contribution in order to provide users with a record of all contributions and to
 monitor how funds are being directed. The application also provides reports for financial
-reporting purposes. Here is the web interface for [Trancker](http://github.com/ODINAKACHUKWU/trancker) application.
+reporting purposes. Here is the web interface for [Trancker](http://github.com/ODINAKACHUKWU/client) application.
 
 # Table of Contents
 

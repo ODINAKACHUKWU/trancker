@@ -7,7 +7,7 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors, debug: true, logger: (-> { Rails.logger }) do
   allow do
-    origins 'http://localhost:3000', 'http://localhost:4000'
+    origins '*'
 
     resource '/cors',
       headers: :any,
